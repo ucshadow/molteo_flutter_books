@@ -1,8 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
+/// Used in an attempt to provide a function based approach to scaling.
+/// The scaling works by providing a given factor to the width or height of
+/// the screen, depending if the phone is in portrait or landscape
 class StyleMaker {
+
+  /// Mostly used to scale and style text
   static TextStyle withSize(BuildContext context, {factor=22, primary=false, color, fontWeight}) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -20,6 +24,7 @@ class StyleMaker {
     );
   }
 
+  /// used to get the size as a double.
   static double getSize(BuildContext context, {factor=22, primary=false}) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;

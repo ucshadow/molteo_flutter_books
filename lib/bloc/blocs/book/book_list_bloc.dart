@@ -5,6 +5,9 @@ import 'package:flutter_book_app/bloc/state/book/book_list_state.dart';
 import 'package:flutter_book_app/models/Book.dart';
 import 'package:flutter_book_app/providers/implementationProvider.dart';
 
+/// Bloc that handles events/state specific to a list of books
+///
+/// [BookEventGetNewBooks] event
 class BookListBloc extends Bloc<BookListEvent, BookListState> {
   BookListBloc() : super(BookListInitial());
   IBookApi api = ImplementationProvider.getBookApi();

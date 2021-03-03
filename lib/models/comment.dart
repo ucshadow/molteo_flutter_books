@@ -1,3 +1,4 @@
+/// A model representing a comment to a book
 class Comment {
   String author;
   String rating;

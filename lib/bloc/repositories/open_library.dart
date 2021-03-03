@@ -2,6 +2,8 @@ import 'package:flutter_book_app/api/IBookApi.dart';
 import 'package:flutter_book_app/models/Book.dart';
 import 'package:flutter_book_app/providers/implementationProvider.dart';
 
+
+/// Api implementation for the http://openlibrary.org website
 class OpenLibrary implements IBookApi {
   @override
   Map<String, String> responseMapping = {

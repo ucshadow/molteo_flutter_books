@@ -21,7 +21,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    theme = darkTheme;
     _setTheme();
     InterestController().init();
     GlobalFunctionRegistry.registerFunction("themeSwitcher", _changeTheme);
@@ -31,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _setTheme() async {
     ThemeData data = await UserPreferences().getThemeData();
     setState(() {
-      theme = data;
+      theme = data??themeData;
     });
   }
 

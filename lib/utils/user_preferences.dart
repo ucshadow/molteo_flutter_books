@@ -3,6 +3,8 @@ import 'package:flutter_book_app/constants/themes.dart';
 import 'package:flutter_book_app/models/Book.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+/// Handles interacting with the shared preferences instance
 class UserPreferences {
   static final UserPreferences _singleton = UserPreferences._internal();
 

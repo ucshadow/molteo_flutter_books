@@ -5,6 +5,10 @@ import 'package:flutter_book_app/bloc/state/book/book_state.dart';
 import 'package:flutter_book_app/models/Book.dart';
 import 'package:flutter_book_app/providers/implementationProvider.dart';
 
+
+/// Bloc that handles events/state specific to a single book
+///
+/// [BookEventGetBookByUrl] event
 class BookBloc extends Bloc<BookEvent, BookState> {
   BookBloc() : super(BookStateInitial());
   IBookApi api = ImplementationProvider.getBookApi();

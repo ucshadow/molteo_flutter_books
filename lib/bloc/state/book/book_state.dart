@@ -3,6 +3,8 @@ import 'package:flutter_book_app/models/Book.dart';
 import 'package:flutter_book_app/widgets/book/detailed_book.dart';
 import 'package:flutter_book_app/widgets/custom/a_widgets.dart';
 
+
+/// Handles the state a book can be in at any given time
 class BookState {
   Widget render() {
     return Container();

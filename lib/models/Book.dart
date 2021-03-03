@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_book_app/models/comment.dart';
 
+
+/// A model representing a book
 class Book {
   String title;
   String subtitle;

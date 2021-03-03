@@ -1,5 +1,11 @@
 import 'package:flutter_book_app/models/Book.dart';
 
+
+/// Handles book management features like adding and removing books
+/// to specific lists, it uses sets since some methods may be called
+/// from a state update (setState()) and can result in duplicate books in the
+/// same list. All sets should have in the end getters/setters for interacting
+/// with them, I just added what I needed from lack of time
 class BookController {
   static final BookController _singleton = BookController._internal();
   Set<Book> _mostPopularToday = Set();

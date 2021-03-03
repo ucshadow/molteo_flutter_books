@@ -1,3 +1,5 @@
+/// Used for providing global access to some of the functions, for example
+/// changing the App theme.
 class GlobalFunctionRegistry{
   static final Map<String, Function> _registry = {};
 

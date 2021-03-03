@@ -6,6 +6,7 @@ import 'package:flutter_book_app/models/comment.dart';
 import 'package:flutter_book_app/providers/implementationProvider.dart';
 import 'package:html/parser.dart' show parse;
 
+/// Api implementation for the https://www.goodreads.com website
 class GoodReads implements IBookApi {
   @override
   Map<String, String> responseMapping;

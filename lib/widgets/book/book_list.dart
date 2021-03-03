@@ -4,8 +4,11 @@ import 'package:flutter_book_app/widgets/book/book_list_item.dart';
 
 class BookList extends StatefulWidget {
   final List<Book> books;
+  final double width;
+  final Function onTapItemCallback;
 
-  const BookList({Key key, this.books}) : super(key: key);
+  const BookList({Key key, this.books, this.width, this.onTapItemCallback})
+      : super(key: key);
 
   @override
   _BookListState createState() => _BookListState();
@@ -18,6 +21,8 @@ class _BookListState extends State<BookList> {
 
   @override
   void initState() {
+
+    // animate the populating of the list
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var future = Future(() {});
       for (var i = 0; i < widget.books.length; i++) {
@@ -25,8 +30,9 @@ class _BookListState extends State<BookList> {
           return Future.delayed(Duration(milliseconds: 100), () {
             _addItem(BookListItem(
               book: widget.books[i],
-              width: MediaQuery.of(context).size.width,
+              width: widget.width,
               removeSelf: _removeBook,
+              onTapCallback: widget.onTapItemCallback,
             ));
           });
         });
@@ -55,8 +61,7 @@ class _BookListState extends State<BookList> {
     );
   }
 
-  Widget _buildItem(
-      BookListItem book, Animation animation, int index) {
+  Widget _buildItem(BookListItem book, Animation animation, int index) {
     return FadeTransition(
       opacity: animation,
       // sizeFactor: animation,
@@ -72,15 +77,15 @@ class _BookListState extends State<BookList> {
         parent: animation,
       ).drive((Tween<Offset>(
         begin: Offset(slideToRight ? 1 : 0, 0),
-        end: Offset(slideToRight ? 0: 1, 0),
+        end: Offset(slideToRight ? 0 : 1, 0),
       ))),
       child: book,
     );
   }
 
   void _removeBook(BookListItem item) {
-    for(int i = 0; i < books.length; i++) {
-      if(books[i] == item) {
+    for (int i = 0; i < books.length; i++) {
+      if (books[i] == item) {
         return _removeItem(i);
       }
     }
@@ -96,9 +101,10 @@ class _BookListState extends State<BookList> {
   }
 
   void _addItem(BookListItem book) {
-    if(!mounted) return;
+    if (!mounted) return;
     final int _index = books.length;
     books.insert(_index, book);
-    _listKey.currentState.insertItem(_index, duration: Duration(milliseconds: 100));
+    _listKey.currentState
+        .insertItem(_index, duration: Duration(milliseconds: 100));
   }
 }

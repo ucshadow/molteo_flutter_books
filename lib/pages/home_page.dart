@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_book_app/pages/interested_in_books.dart';
 import 'package:flutter_book_app/pages/new_books.dart';
+import 'package:flutter_book_app/utils/style_maker.dart';
 import 'package:flutter_book_app/widgets/custom/a_widgets.dart';
 
 import 'not_interested_in_books.dart';
@@ -13,7 +14,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  List<String> pageTitles = [
+    'Books you are not interested in',
+    'New books',
+    'Books you are interested in',
+  ];
+
+  List<Widget> _widgetOptions = <Widget>[
     NotInterestedInBooks(),
     NewBooks(),
     InterestedInBooks(),
@@ -27,9 +34,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: AText("Hi"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(screenHeight > screenWidth
+            ? screenHeight * .05
+            : screenHeight * .08),
+        child: AppBar(
+          title: AText(
+            pageTitles.elementAt(_selectedIndex),
+            style: StyleMaker.withSize(context, primary: true),
+          ),
+        ),
       ),
       body: Container(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -54,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           ],
           currentIndex: _selectedIndex,
           selectedItemColor:
-          Theme.of(context).buttonTheme.colorScheme.secondaryVariant,
+              Theme.of(context).buttonTheme.colorScheme.secondaryVariant,
           onTap: _onItemTapped,
         ),
       ),

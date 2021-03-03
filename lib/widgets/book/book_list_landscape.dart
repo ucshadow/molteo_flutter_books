@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_book_app/bloc/blocs/book/book_bloc.dart';
@@ -7,6 +6,12 @@ import 'package:flutter_book_app/bloc/state/book/book_state.dart';
 import 'package:flutter_book_app/models/Book.dart';
 import 'package:flutter_book_app/widgets/custom/a_widgets.dart';
 
+import 'book_list.dart';
+
+/// Responsible for displaying a list of [BookListItem]
+/// when in landscape mode. The difference from [BookListPortrait] is
+/// the width and the tap (on Book widget) functionality
+/// [books] the list of [Book] objects
 class BookListLandscape extends StatefulWidget {
   final List<Book> books;
 
@@ -18,6 +23,8 @@ class BookListLandscape extends StatefulWidget {
 
 class _BookListLandscapeState extends State<BookListLandscape> {
   int selected = 0;
+
+  /// The bloc responsible for emitting events on tap and the initial event
   BookBloc bookBloc;
 
   @override
@@ -35,53 +42,47 @@ class _BookListLandscapeState extends State<BookListLandscape> {
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
+
+          // the book list
           AContainer(
-            width: width * .25,
-            child: AListView.builder(
-              itemCount: widget.books.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    print(widget.books[index].url);
-                    setState(() {
-                      selected = index;
-                      bookBloc.add(BookEventGetBookByUrl(widget.books[selected].url));
-                    });
-                  },
-                  child: AContainer(
-                    height: height * .5,
-                    child: APadding(
-                      child: CachedNetworkImage(
-                        imageUrl: widget.books[index].image ??
-                            'https://i.imgur.com/sUFH1Aq.png',
-                        fit: BoxFit.fitHeight,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        fadeInDuration: Duration(milliseconds: 500),
-                      ),
-                    ),
-                  ),
-                );
-              }
+            width: width * .35,
+            child: BookList(
+              books: widget.books,
+              width: width * .35,
+              onTapItemCallback: onTapItem,
             ),
           ),
+
+          // the right section (comments)
           Positioned(
             right: 0,
             child: AContainer(
               height: height,
-              width: width * .75,
+              width: width * .65,
               child: BlocProvider(
-                create: (context) =>
-                bookBloc..add(BookEventGetBookByUrl(widget.books[selected].url)),
+                create: (context) => bookBloc
+                  ..add(BookEventGetBookByUrl(widget.books[selected].url)),
                 child: BlocBuilder<BookBloc, BookState>(
                   builder: (context, state) {
                     return state.render();
                   },
                 ),
               ),
-          ),),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  /// callback for tapping a Book widget in landscape mode
+  /// will update the right section with data about the book
+  onTapItem(Book book) {
+    if(book.url == null) {
+      print('${book.title} has no url');
+      return;
+    }
+    bookBloc
+      ..add(BookEventGetBookByUrl(book.url));
   }
 }
