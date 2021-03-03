@@ -25,6 +25,7 @@ class _BookListState extends State<BookList> {
           return Future.delayed(Duration(milliseconds: 100), () {
             _addItem(BookListItem(
               book: widget.books[i],
+              width: MediaQuery.of(context).size.width,
               removeSelf: _removeBook,
             ));
           });

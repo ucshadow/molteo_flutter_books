@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_book_app/models/Book.dart';
+import 'package:flutter_book_app/widgets/book/detailed_book.dart';
+import 'package:flutter_book_app/widgets/custom/a_widgets.dart';
 
 class BookState {
   Widget render() {
@@ -14,18 +17,29 @@ class BookStateInitial extends BookState {
 
 class BookLoading extends BookState {
   Widget render() {
-    return Container();
+    return ACenter(
+      child: LinearProgressIndicator(),
+    );
   }
 }
 
 class BookLoadingSuccess extends BookState {
+  final Book book;
+
+  BookLoadingSuccess(this.book);
+
   Widget render() {
-    return Container();
+    return DetailedBook(book: book,);
   }
 }
 
 class BookLoadingFailed extends BookState {
+  final String message;
+
+  BookLoadingFailed({this.message});
   Widget render() {
-    return Container();
+    return ACenter(
+      child: AText(message??"An error occurred while loading the book"),
+    );
   }
 }

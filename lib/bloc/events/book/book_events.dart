@@ -13,8 +13,8 @@ class BookEventGetBookByIsbn extends BookEvent {
   BookEventGetBookByIsbn(this.isbn);
 }
 
-class BookEventGetBookByName extends BookEvent {
-  final String name;
+class BookEventGetBookByUrl extends BookEvent {
+  final String url;
 
-  BookEventGetBookByName(this.name);
+  BookEventGetBookByUrl(this.url);
 }

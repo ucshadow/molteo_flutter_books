@@ -18,6 +18,7 @@ class BookListBloc extends Bloc<BookListEvent, BookListState> {
         yield BookListLoadingSuccess(books);
       } catch (e) {
         print('Bloc Error BookEventGetNewBooks');
+        print(e);
         yield BookListLoadingFailed(errorMessage: e.toString());
       }
     }

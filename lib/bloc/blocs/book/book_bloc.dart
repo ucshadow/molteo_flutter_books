@@ -11,14 +11,15 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
   @override
   Stream<BookState> mapEventToState(BookEvent event) async* {
-    if(event is BookEventGetBookByName) {
+    if(event is BookEventGetBookByUrl) {
       yield BookLoading();
       try {
-        final List<Book> books = await api.getNewBooks();
-        yield BookLoadingSuccess();
+        final Book book = await api.getBookBy('url', event.url);
+        yield BookLoadingSuccess(book);
       } catch (e) {
-        print('Bloc Error BookEventGetNewBooks');
-        yield BookLoadingFailed();
+        print('Bloc Error BookEventGetBookByUrl');
+        print(e);
+        yield BookLoadingFailed(message: e);
       }
     }
   }

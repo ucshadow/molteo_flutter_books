@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_book_app/bloc/controllers/InterestController.dart';
 import 'package:flutter_book_app/models/Book.dart';
@@ -8,9 +9,10 @@ class BookListItem extends StatefulWidget {
   final Book book;
   final Function removeSelf;
   final int index;
+  final double width;
 
   const BookListItem(
-      {Key key, this.book, this.removeSelf, this.index})
+      {Key key, this.book, this.removeSelf, this.index, this.width})
       : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class _BookListItemState extends State<BookListItem> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = widget.width;
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (x > width * .5) {
@@ -107,11 +109,14 @@ class _BookListItemState extends State<BookListItem> {
                               padding: EdgeInsets.all(6),
                               child: Material(
                                 elevation: 2,
-                                child: Image.network(
-                                  widget.book?.image ??
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.book?.image ??
                                       'https://i.imgur.com/sUFH1Aq.png',
                                   height:
                                       StyleMaker.getSize(context, factor: 3.8),
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    fadeInDuration: Duration(milliseconds: 200),
                                 ),
                               ),
                             ),

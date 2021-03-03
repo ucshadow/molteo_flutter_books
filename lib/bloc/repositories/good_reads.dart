@@ -13,6 +13,19 @@ class GoodReads implements IBookApi {
 
   @override
   Future<Book> getBookBy(String by, String q) async {
+    if (by == 'url') {
+      if (BookController().detailedBooks.isNotEmpty) {
+        Book detailedCachedBook = BookController().getDetailedBookByUrl(q);
+        if(detailedCachedBook != null) return detailedCachedBook;
+      }
+      final response = await ImplementationProvider.getHttpProvider()
+          .get(q, withFakeHeaders: true);
+      Book book = await _parseBookFromHtml(response);
+      book.comments = await _getComments(response);
+      book.url = q;
+      BookController().addDetailedBook(book);
+      return book;
+    }
     final response = await ImplementationProvider.getHttpProvider()
         .get("$baseUrl/book/show/$q", withFakeHeaders: true);
     Book book = await _parseBookFromHtml(response);
@@ -35,11 +48,16 @@ class GoodReads implements IBookApi {
 
   @override
   Future<List<Book>> getNewBooks() async {
-    if(BookController().mostPopularToday.isNotEmpty) {
-      return BookController().mostPopularToday.where((book) => !InterestController().notInterestedInTitles.contains(book.title)).toList();
+    if (BookController().mostPopularToday.isNotEmpty) {
+      return BookController()
+          .mostPopularToday
+          .where((book) =>
+              !InterestController().notInterestedInTitles.contains(book.title))
+          .toList();
     }
-    final response = await ImplementationProvider.getHttpProvider()
-        .get("$baseUrl/book/popular_by_date/2021/${DateTime.now().month}", withFakeHeaders: true);
+    final response = await ImplementationProvider.getHttpProvider().get(
+        "$baseUrl/book/popular_by_date/2021/${DateTime.now().month}",
+        withFakeHeaders: true);
     return await _htmlResultToBookList(response);
   }
 
@@ -57,10 +75,13 @@ class GoodReads implements IBookApi {
       b.image = img;
       b.subtitle = subtitle;
       b.url = url;
-      BookController().mostPopularToday.add(b);
       books.add(b);
     });
-    return books.where((book) => !InterestController().notInterestedInTitles.contains(book.title)).toList();
+    BookController().addManyMostPopularToday(books);
+    return books
+        .where((book) =>
+            !InterestController().notInterestedInTitles.contains(book.title))
+        .toList();
   }
 
   Future<Book> _parseBookFromHtml(response) async {
@@ -82,10 +103,27 @@ class GoodReads implements IBookApi {
     List<Comment> comments = [];
     document.getElementsByClassName('friendReviews').forEach((element) {
       Comment comment = Comment();
-      comment.text = element.getElementsByClassName('reviewText')[0].text;
-      comment.date = element.getElementsByClassName('reviewDate')[0].text;
-      comment.rating = element.getElementsByClassName('notranslate')[0].text;
-      comment.author = element.getElementsByClassName('user')[0].text;
+      try {
+        comment.text = element.getElementsByClassName('reviewText')[0].text;
+      } catch (e) {
+        comment.text = '';
+      }
+      try {
+        comment.date = element.getElementsByClassName('reviewDate')[0].text;
+      } catch (e) {
+        comment.date = '';
+      }
+      try{
+        comment.rating = element.getElementsByClassName('notranslate')[0].text;
+      } catch (e) {
+        comment.rating = '';
+      }
+      try{
+        comment.author = element.getElementsByClassName('user')[0].text;
+      } catch (e) {
+        comment.author = '';
+      }
+
       comments.add(comment);
     });
     return comments;
